@@ -1,0 +1,33 @@
+{% extends 'bootstrap/base.html' %}
+{% block title %}
+    {% if title %}{{ title }}{% else %}Willkommen zur Umfrage{% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+            Umfrage: 
+            <a href="/index">Home</a>
+            <a href="/login">Login</a>
+            <a href="/frage/neu">Frage erfassen</a>
+            <a href="/umfrage">Umfrage</a>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
