@@ -1,59 +1,107 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <h1>Neue Frage erfassen</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.category.label }}</br>
-            {{ form.category }}</br>
-            {{ form.frontend.label }}</br>
-            {{ form.frontend }}</br>
-            {{ form.question.label }}</br>
-            {{ form.question (size=32)}}</br>
-            {{ form.sort.label }}</br>
-            {{ form.sort (size=5)}}</br>
-            {{ form.ans01.label }}</br>
-            {{ form.ans01 (size=32)}}</br>
-            {{ form.ans02.label }}</br>
-            {{ form.ans02 (size=32)}}</br>
-            {{ form.ans03.label }}</br>
-            {{ form.ans03 (size=32)}}</br>
-            {{ form.ans04.label }}</br>
-            {{ form.ans04 (size=32)}}</br>
-            {{ form.ans05.label }}</br>
-            {{ form.ans05 (size=32)}}</br>
-            {{ form.ans06.label }}</br>
-            {{ form.ans06 (size=32)}}</br>
-            {{ form.ans07.label }}</br>
-            {{ form.ans07 (size=32)}}</br>
-            {{ form.ans08.label }}</br>
-            {{ form.ans08 (size=32)}}</br>
-            {{ form.ans09.label }}</br>
-            {{ form.ans09 (size=32)}}</br>
-            {{ form.ans10.label }}</br>
-            {{ form.ans10 (size=32)}}</br>
-            {{ form.ans11.label }}</br>
-            {{ form.ans11 (size=32)}}</br>
-            {{ form.ans12.label }}</br>
-            {{ form.ans12 (size=32)}}</br>
-            {{ form.ans13.label }}</br>
-            {{ form.ans13 (size=32)}}</br>
-            {{ form.ans14.label }}</br>
-            {{ form.ans14 (size=32)}}</br>
-            {{ form.ans15.label }}</br>
-            {{ form.ans15 (size=32)}}</br>
-            {{ form.ans16.label }}</br>
-            {{ form.ans16 (size=32)}}</br>
-            {{ form.ans17.label }}</br>
-            {{ form.ans17 (size=32)}}</br>
-            {{ form.ans18.label }}</br>
-            {{ form.ans18 (size=32)}}</br>
-            {{ form.ans19.label }}</br>
-            {{ form.ans19 (size=32)}}</br>
-            {{ form.ans20.label }}</br>
-            {{ form.ans20 (size=32)}}</br>
+            <div class="input-group">
+            {{ form.category.label(class_="input-group-addon") }}
+            {{ form.category (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.frontend.label(class_="input-group-addon") }}
+            {{ form.frontend (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.question.label(class_="input-group-addon") }}
+            {{ form.question (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.sort.label(class_="input-group-addon") }}
+            {{ form.sort (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans01.label(class_="input-group-addon") }}
+            {{ form.ans01 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans02.label(class_="input-group-addon") }}
+            {{ form.ans02 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans03.label(class_="input-group-addon") }}
+            {{ form.ans03 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans04.label(class_="input-group-addon") }}
+            {{ form.ans04 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans05.label(class_="input-group-addon") }}
+            {{ form.ans05 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans06.label(class_="input-group-addon") }}
+            {{ form.ans06 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans07.label(class_="input-group-addon") }}
+            {{ form.ans07 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans08.label(class_="input-group-addon") }}
+            {{ form.ans08 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans09.label(class_="input-group-addon") }}
+            {{ form.ans09 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans10.label(class_="input-group-addon") }}
+            {{ form.ans10 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans11.label(class_="input-group-addon") }}
+            {{ form.ans11 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans12.label(class_="input-group-addon") }}
+            {{ form.ans12 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans13.label(class_="input-group-addon") }}
+            {{ form.ans13 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans14.label(class_="input-group-addon") }}
+            {{ form.ans14 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans15.label(class_="input-group-addon") }}
+            {{ form.ans15 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans16.label(class_="input-group-addon") }}
+            {{ form.ans16 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans17.label(class_="input-group-addon") }}
+            {{ form.ans17 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans18.label(class_="input-group-addon") }}
+            {{ form.ans18 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans19.label(class_="input-group-addon") }}
+            {{ form.ans19 (class_="form-control")}}
+            </div>
+            <div class="input-group">
+            {{ form.ans20.label(class_="input-group-addon") }}
+            {{ form.ans20 (class_="form-control")}}
+            </div>
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit (class_="btn btn-primary") }}</p>
     </form>
 {% endblock %}

@@ -61,6 +61,10 @@ def newQuestion():
 @app.route('/umfrage', methods=['GET', 'POST'])
 def newSurvey():
     form = SurveyForm()
+    print(form.__dict__)
+    for field in form:
+        print()
+        print(field.type)
     # for element in form:
     #     print(element.id)
     if form.validate_on_submit():

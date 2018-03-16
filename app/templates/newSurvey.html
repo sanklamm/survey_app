@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
     <h1>Umfrage</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {% for element in form %}
-                {{ element.label }}</br>
-                {{ element() }}</br>
-            <!--{{ form.q0.label }}</br>-->
-            <!--{{ form.q0 }}</br>-->
-            <!--{{ form.q1.label }}</br>-->
-            <!--{{ form.q1 }}</br>-->
-            <!--{{ form.q2.label }}</br>-->
-            <!--{{ form.q2 }}</br>-->
+            {% for field in form %}
+                    {% if field.type == "RadioField" %}
+                        {{ field.label(class_="radio-inline") }}
+                        {{ field }}
+                    {% else %}
+                        <div class="input-group">
+                            {{ field.label(class_="input-group-addon") }}
+                            {{ field (class_="form-control")}}
+                        </div>
+                    {% endif %}
             {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
