@@ -46,12 +46,17 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 37%;">
+            <span class="sr-only">60% Complete</span>
+        </div>
+    </div>
     <h1>Umfrage</h1>
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#allgemein">Allgemein</a></li>
-        <li><a data-toggle="tab" href="#ernaehrung">Ernährung</a></li>
-        <li><a data-toggle="tab" href="#freizeit">Freizeitverhalten</a></li>
-        <li><a data-toggle="tab" href="#gesundheit">Gesundheit</a></li>
+        <li id="tab1" class="active"><a data-toggle="tab" href="#allgemein">Allgemein</a></li>
+        <li id="tab2"><a data-toggle="tab" href="#ernaehrung">Ernährung</a></li>
+        <li id="tab3"><a data-toggle="tab" href="#freizeit">Freizeitverhalten</a></li>
+        <li id="tab4"><a data-toggle="tab" href="#gesundheit">Gesundheit</a></li>
     </ul>
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -59,19 +64,34 @@
             <div class="tab-content">
                 <div id="allgemein" class="tab-pane fade in active">
                     {{ render_form(form, "Allgemeines") }}
+                    <p><button id="btn1" class="btn pull-right"><a data-toggle="tab" href="#ernaehrung">Weiter</a></button></p>
                 </div>
                 <div id="ernaehrung" class="tab-pane fade">
                     {{ render_form(form, "Ernährung") }}
+                    <p><button id="btn4" class="btn"><a data-toggle="tab" href="#allgemein">Zurück</a></button>
+                    <button id="btn2" class="btn pull-right"><a data-toggle="tab" href="#freizeit">Weiter</a></button></p>
                 </div>
                 <div id="freizeit" class="tab-pane fade">
                     {{ render_form(form, "Freizeitverhalten") }}
+                    <p><button id="btn5" class="btn"><a data-toggle="tab" href="#ernaehrung">Zurück</a></button>
+                    <button id="btn3" class="btn pull-right"><a data-toggle="tab" href="#gesundheit">Weiter</a></button></p>
                 </div>
                 <div id="gesundheit" class="tab-pane fade">
                     {{ render_form(form, "Gesundheit") }}
-                <p>{{ form.submit (class_="btn btn-primary") }}</p>
+                    <p><button id="btn6" class="btn"><a data-toggle="tab" href="#freizeit">Zurück</a></button>
+                    {{ form.submit (class_="btn btn-primary pull-right") }}</p>
                 </div>
             </div>
         </p>
     </form>
+
+    <script>
+        document.getElementById("btn1").onclick = function() { $('#tab2').tab('show') };
+        document.getElementById("btn2").onclick = function() { $('#tab3').tab('show') };
+        document.getElementById("btn3").onclick = function() { $('#tab4').tab('show') };
+        document.getElementById("btn4").onclick = function() { $('#tab1').tab('show') };
+        document.getElementById("btn5").onclick = function() { $('#tab2').tab('show') };
+        document.getElementById("btn6").onclick = function() { $('#tab3').tab('show') };
+    </script>
     
 {% endblock %}
