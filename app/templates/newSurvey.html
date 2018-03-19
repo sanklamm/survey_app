@@ -1,22 +1,77 @@
+{% macro render_form(form, category) %}
+    {% for field in form %}
+        {% if field.description == category %}
+            {% if field.type == "CSRFTokenField" %}
+            <p>
+                {{ field }}
+            </p>
+            {% elif field.type == "SubmitField" %}
+            <p>
+                {{ field (class_="btn btn-primary")}}
+            </p>
+            {% elif field.type == "MultiCheckboxField" %}
+            <div class="input-group">
+            <p>
+                {{ field.label }}</br>
+                {% for value, label, _ in field.iter_choices() %}
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
+                    </label>
+                {% endfor %}
+            </p>
+            </div>
+            {% elif field.type == "RadioField" %}
+            <div class="input-group">
+            <p>
+                {{ field.label }}</br>
+                {% for value, label, _ in field.iter_choices() %}
+                    <label class="radio-inline">
+                        <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
+                    </label>
+                {% endfor %}
+            </p>
+            </div>
+            {% else %}
+            <div class="input-group">
+            <p>
+                {{ field.label }}
+                {{ field (class_="form-control")}}
+            </p>
+            </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
 {% extends "base.html" %}
 
 {% block app_content %}
     <h1>Umfrage</h1>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#allgemein">Allgemein</a></li>
+        <li><a data-toggle="tab" href="#ernaehrung">Ernährung</a></li>
+        <li><a data-toggle="tab" href="#freizeit">Freizeitverhalten</a></li>
+        <li><a data-toggle="tab" href="#gesundheit">Gesundheit</a></li>
+    </ul>
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {% for field in form %}
-                    {% if field.type == "RadioField" %}
-                        {{ field.label(class_="radio-inline") }}
-                        {{ field }}
-                    {% else %}
-                        <div class="input-group">
-                            {{ field.label(class_="input-group-addon") }}
-                            {{ field (class_="form-control")}}
-                        </div>
-                    {% endif %}
-            {% endfor %}
+            <div class="tab-content">
+                <div id="allgemein" class="tab-pane fade in active">
+                    {{ render_form(form, "Allgemeines") }}
+                </div>
+                <div id="ernaehrung" class="tab-pane fade">
+                    {{ render_form(form, "Ernährung") }}
+                </div>
+                <div id="freizeit" class="tab-pane fade">
+                    {{ render_form(form, "Freizeitverhalten") }}
+                </div>
+                <div id="gesundheit" class="tab-pane fade">
+                    {{ render_form(form, "Gesundheit") }}
+                <p>{{ form.submit (class_="btn btn-primary") }}</p>
+                </div>
+            </div>
         </p>
-        <p>{{ form.submit() }}</p>
     </form>
+    
 {% endblock %}

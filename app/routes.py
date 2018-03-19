@@ -65,6 +65,7 @@ def newSurvey():
     for field in form:
         print()
         print(field.type)
+        if field.type == "StringField": print(field)
     # for element in form:
     #     print(element.id)
     if form.validate_on_submit():

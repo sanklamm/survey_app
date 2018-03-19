@@ -11,13 +11,13 @@ def getQuestions():
     for i, q in enumerate(questions):
         choices = generateChoices(q)
         if q.frontend == "StringField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}")')
+            qslist.append(f'q{i} = {q.frontend}("{q.question}", description="{q.category}")')
         elif q.frontend == "RadioField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)})')
+            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
         elif q.frontend == "SelectField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)})')
-        elif q.frontend == "SelectMultipleField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, option_widget=widgets.CheckboxInput())')
+            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
+        elif q.frontend == "SelectMultipleField" or "MultiCheckboxField":
+            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, option_widget=widgets.CheckboxInput(), description="{q.category}")')
     # print(qslist)
     return qslist
 
@@ -31,6 +31,9 @@ def generateChoices(q):
 def getqs03():
     return '''q03 = StringField('Wie schwer sind Sie? (in kg)')'''
 
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 class LoginForm(FlaskForm):
     accessToken = StringField('Token', validators=[DataRequired()])
@@ -47,7 +50,8 @@ class QuestionForm(FlaskForm):
                                                 ('StringField', 'Freitextfeld'),
                                                 ('RadioField', 'Radiobuttons'),
                                                 ('SelectField', 'Dropdown'),
-                                                ('SelectMultipleField', 'Checkboxen')])
+                                                ('MultiCheckboxField', 'Checkboxen'),
+                                                ('SelectMultipleField', 'Dropdown mit Mehrfachauswahl')])
     ans01 = StringField('Antwortmöglichkeit 1')
     ans02 = StringField('Antwortmöglichkeit 2')
     ans03 = StringField('Antwortmöglichkeit 3')
@@ -76,36 +80,4 @@ class SurveyForm(FlaskForm):
     qslist = getQuestions()
     for qs in qslist:
         exec(qs)
-    # q01 = StringField('Wie alt sind Sie?')
-    # q02 = RadioField('Wie groß sind Sie? (in cm)', choices=[
-    #     ('<150', '<150'),
-    #     ('150-160', '150-160'),
-    #     ('160-170', '160-170'),
-    #     ('170-180', '170-180'),
-    #     ('180-190', '180-190'),
-    #     ('190-200', '190-200'),
-    #     ('>200', '>200'),
-    #     ])
-    # qs03 = getqs03()
-    # exec(qs03)
-    # q04 = SelectField('Welchen Bildungsgang besuchen Sie?', choices=[
-    #     ('Abitur', 'Abitur'),
-    #     ('Fachhochschulreife', 'Fachhochschulreife'),
-    #     ('MSA', 'MSA'),
-    #     ('Fachinformatiker', 'Fachinformatiker'),
-    #     ('ITSE', 'ITSE - Systemelektroniker/in'),
-    #     ('MATSE', 'MATSE - Mathematisch-Teschnische/r Softwareentwickler/in'),
-    #     ('Augenoptiker', 'Augenoptiker/in'),
-    #     ('Chirurgiemechaniker und Werkzeugmechaniker', 'Chirurgiemechaniker/in und Werkzeugmechaniker/in'),
-    #     ('Orthopädietechnik-Mechaniker', 'Orthopädietechnik-Mechaniker/in'),
-    #     ('Feinoptiker', 'Feinoptiker/in'),
-    #     ('Goldschmied', 'Goldschmied/in'),
-    #     ('Technischer Systemplaner', 'Technische/r Systemplaner/in'),
-    #     ('Technischer Produktdesigner', 'Technische/r Produktdesigner/in'),
-    #     ('IT-Assistent', 'IT-Assistent/in'),
-    #     ('IT-Geräteberater und -Installateur', 'IT-Geräteberater/in und -Installateur/in'),
-    #     ('Medizintechnische Assistent - Schwerpunkt Medizinische Gerätetechnik', 'Medizintechnische(r) Assistent/-in - Schwerpunkt Medizinische Gerätetechnik'),
-    #     ('Lehrkraft', 'Lehrkraft'),
-    #     ('Sonstige', 'Sonstige')
-    #     ])
     submit = SubmitField('Abschicken')
