@@ -58,7 +58,7 @@
         <li id="tab3"><a data-toggle="tab" href="#freizeit">Freizeitverhalten</a></li>
         <li id="tab4"><a data-toggle="tab" href="#gesundheit">Gesundheit</a></li>
     </ul>
-    <form action="" method="post">
+    <form id="input-progress" action="" method="post">
         {{ form.hidden_tag() }}
         <p>
             <div class="tab-content">
@@ -84,7 +84,11 @@
             </div>
         </p>
     </form>
+{% endblock %}
 
+
+{% block scripts %}
+{{ super() }}
     <script>
         document.getElementById("btn1").onclick = function() { $('#tab2').tab('show') };
         document.getElementById("btn2").onclick = function() { $('#tab3').tab('show') };
@@ -92,6 +96,37 @@
         document.getElementById("btn4").onclick = function() { $('#tab1').tab('show') };
         document.getElementById("btn5").onclick = function() { $('#tab2').tab('show') };
         document.getElementById("btn6").onclick = function() { $('#tab3').tab('show') };
+
+        $(document).ready(function(){
+            function updateInputProgress(){
+                var filledFields = 0;
+                console.log("filled Fields: " + filledFields);
+                $("#input-progress").find("input, select, ul").each(function(){
+                    if($(this).val() != ""){
+                        filledFields++;
+                        console.log("filled Fields: " + filledFields);
+                    }
+                });
+                
+                var percent = Math.ceil(100 * filledFields / totalFields);
+                $("#progress-inputs .progress-bar").attr("aria-valuenow", percent).width(percent + "%").find(".sr-only").html(percent + "% Complete");
+                
+                return percent;
+            }
+            
+            //Input Progress
+            var totalFields = $("#input-progress").find("input, select").length;
+            console.log("total Fields: " + totalFields);
+            $("#input-progress").click(function(){
+                updateInputProgress();
+            });
+            $("#input-progress .btn-success").click(function(){
+                var percent = updateInputProgress();
+                if(percent == 100){
+                    alert("Finished inputs successfully!");
+                }
+            })
+            
+        });
     </script>
-    
 {% endblock %}

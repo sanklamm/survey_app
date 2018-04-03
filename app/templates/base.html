@@ -23,8 +23,12 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     <li><a href="{{ url_for('newSurvey') }}">Umfrage</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
                 </ul>
                 {% if g.search_form %}
                 <form class="navbar-form navbar-left" method="get" action="{{ url_for('main.search') }}">
@@ -33,11 +37,13 @@
                     </div>
                 </form>
                 {% endif %}
+                {% if current_user.is_authenticated and current_user.has_roles('Admin') %}
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="{{ url_for('newQuestion') }}">Neue Frage anlegen</a>
+                        <a href="{{ url_for('admin.index') }}">Admin Backend</a>
                     </li>
                 </ul>
+                {% endif %}
             </div>
         </div>
     </nav>

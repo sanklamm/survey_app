@@ -1,0 +1,14 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <h3>Willkommen im Backend zur Umfrage-App der MTS61</h3>
+  <p>Hier kannst du neue Fragen anlegen, neue Access Token generieren und in die Datenbank schauen.</p>
+  <p>Bei Bedarf können sogar Einträge in der DB direkt bearbeitet werden.</p>
+  <ul>
+    <li><a href="{{ url_for('index') }}">Startseite</a></li>
+    <li><a href="{{ url_for('newToken') }}">Neue Token generieren</a></li>
+    <li><a href="{{ url_for('newQuestion') }}">Neue Frage anlegen</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+
+  </ul>
+{% endblock %}

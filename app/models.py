@@ -1,12 +1,57 @@
 from app import db
+from app import login
+from app import app
+# from flask_login import UserMixin
+from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
+import string
+import random
 
-class Token(db.Model):
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('token.id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
+
+class User(UserMixin, db.Model):
+    __tablename__ = 'token'
     id = db.Column(db.Integer, primary_key=True)
-    accessToken = db.Column(db.String(64), index=True, unique=True)
+    password = db.Column(db.String(64), index=True, unique=True)
     used = db.Column(db.Boolean)
 
+    roles = db.relationship('Role', secondary='user_roles')
+
+    def check_token(token):
+        db_token = db.session.query(User).filter_by(password=token, used=False)
+        if db_token:
+            return True
+        else: return False
+
+    def generate_token(quantity, role):
+        role_ = Role.query.filter_by(name=role).first()
+        for _ in range(quantity):
+            token = User(password=token_generator(), used=False)
+            token.roles = [role_,]
+            db.session.add(token)
+        db.session.commit()
+
+    def invalidate_token(self, token):
+        pass
+
+    def get_num_unused_token():
+        num = db.session.query(User).filter_by(used=False).count()
+        return num
+
     def __repr__(self):
-        return '<Token {}>'.format(self.accessToken)
+        return '<Token {}>'.format(self.password)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,7 +85,7 @@ class Question(db.Model):
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    usedToken = db.Column(db.Integer, db.ForeignKey(Token.id))
+    usedToken = db.Column(db.Integer, db.ForeignKey(User.id))
     q01 = db.Column(db.String(40))
     q02 = db.Column(db.String(40))
     q03 = db.Column(db.String(40))
@@ -77,3 +122,10 @@ class Answer(db.Model):
 
     def __repr__(self):
         return '<Answers given by token: {}>'.format(self.usedToken)
+
+def token_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+# print("-------------DB--------------")
+# print(db.config)
+# user_manager = UserManager(app, db)

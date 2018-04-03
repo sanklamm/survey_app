@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Neue Token Generieren</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            <div class="input-group">
+            {{ form.quantity.label(class_="input-group-addon") }}
+            {{ form.quantity (class_="form-control") }}</br>
+            {% for error in form.quantity.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            </div>
+            <div class="input-group">
+            {{ form.role.label(class_="input-group-addon") }}
+            {{ form.role (class_="form-control") }}</br>
+            {% for error in form.quantity.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            </div>
+        </p>
+        <p>{{ form.submit (class_="btn btn-primary") }}</p>
+    </form>
+{% endblock %}

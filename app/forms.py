@@ -39,6 +39,13 @@ class LoginForm(FlaskForm):
     accessToken = StringField('Token', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
+class TokenForm(FlaskForm):
+    quantity = IntegerField('Anzahl neuer Token', validators=[DataRequired()])
+    role = SelectField('Rolle', choices=[
+                                        ('User', 'Teilnehmer'),
+                                        ('Admin', 'Admin')])
+    submit = SubmitField('Erzeuge Token')
+
 class QuestionForm(FlaskForm):
     category = SelectField('Kategorie', choices=[
                                                 ('Allgemeines', 'Allgemeines'),

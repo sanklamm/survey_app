@@ -1,29 +1,56 @@
-from flask import render_template, flash, redirect, jsonify, json
-from app.forms import LoginForm, QuestionForm, SurveyForm
-from app.models import Question, Answer
+from flask import render_template, flash, redirect, jsonify, json, url_for, request
+from app.forms import LoginForm, QuestionForm, SurveyForm, TokenForm
+from app.models import Question, Answer, User
 from app import app
 from app import db
+# from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import login_user, logout_user
+from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
+
+# Setup Flask-User and specify the User data-model
+user_manager = UserManager(app, db, User)
 
 @app.route('/')
 @app.route('/index')
 def index():
     '''This is the route for the Home Page.'''
-    user = {'username': 'Sebastian'}
     return render_template('index.html', 
-                           title='Gesundheit/Ernährung/Freizeit', 
-                           user=user)
+                           title='Gesundheit/Ernährung/Freizeit')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Authentifizierung für Token {}'.format(
-            form.accessToken.data))
+        token = User.query.filter_by(password = form.accessToken.data, used=False).first()
+        print(form.accessToken.data)
+        if token is None:
+            flash('Kein gültiger Token oder Token bereits verbraucht.')
+            return redirect(url_for('login'))
+        login_user(token)
         return redirect('/index')
     return render_template('login.html', title='Authentifizierung', form=form)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/token/neu', methods=['GET', 'POST'])
+@roles_required('Admin')
+def newToken():
+    form = TokenForm()
+    if form.validate_on_submit():
+        User.generate_token(form.quantity.data, form.role.data)
+        quantity = User.get_num_unused_token()
+        flash(f'Es gibt jetzt {quantity} unbenutzte Token in der Datenbank')
+        return redirect('/token/neu')
+    return render_template('newToken.html', title='Tokengenerierung', form=form)
+
 @app.route('/frage/neu', methods=['GET', 'POST'])
+@roles_required('Admin')
 def newQuestion():
     form = QuestionForm()
     if form.validate_on_submit():
@@ -57,15 +84,16 @@ def newQuestion():
         return redirect('/frage/neu')
     return render_template('newQuestion.html', title='Neue Frage erfassen', form=form)
 
-# TODO: Redirect to success page
 @app.route('/umfrage', methods=['GET', 'POST'])
+@login_required
 def newSurvey():
     form = SurveyForm()
-    print(form.__dict__)
-    for field in form:
-        print()
-        print(field.type)
-        if field.type == "StringField": print(field)
+    # print(form.__dict__)
+    # for field in form:
+    #     print()
+    #     print(field.type)
+    #     print(field)
+        # if field.type == "RadioField": print(field)
     # for element in form:
     #     print(element.id)
     if form.validate_on_submit():
@@ -81,8 +109,13 @@ def newSurvey():
         # db.session.add(answer)
         exec('db.session.add(answer)')
         db.session.commit()
-        return redirect('/')
+        return redirect('/fertig')
     return render_template('newSurvey.html', title='Umfrage', form=form)
+
+@app.route('/fertig')
+def success():
+    return render_template('success.html')
+
 
 # TODO: Add Token
 def generateAnswer(form):
