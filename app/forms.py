@@ -5,41 +5,41 @@ from app.models import Question
 from app import db
 
 def getQuestions():
-    '''Builds list of strs representing in DB defined questions as WTForm-elements.'''
+    '''Builds list of strs representing in DB defined questions as WTForm-elements.
+    (This is some nice and hacky code generation while the program runs.)'''
     questions = Question.query.all()
     qslist = []
     for i, q in enumerate(questions):
         choices = generateChoices(q)
         if q.frontend == "StringField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", description="{q.category}")')
+            qslist.append(f'q{(q.id):02} = {q.frontend}("{q.question}", description="{q.category}")')
         elif q.frontend == "RadioField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
+            qslist.append(f'q{(q.id):02} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
         elif q.frontend == "SelectField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
+            qslist.append(f'q{(q.id):02} = {q.frontend}("{q.question}", choices={repr(choices)}, description="{q.category}")')
         elif q.frontend == "SelectMultipleField" or "MultiCheckboxField":
-            qslist.append(f'q{i} = {q.frontend}("{q.question}", choices={repr(choices)}, option_widget=widgets.CheckboxInput(), description="{q.category}")')
-    # print(qslist)
+            qslist.append(f'q{(q.id):02} = {q.frontend}("{q.question}", choices={repr(choices)}, option_widget=widgets.CheckboxInput(), description="{q.category}")')
     return qslist
 
 def generateChoices(q):
     '''Generates list of tuples from answer choices to a given question.'''
     items = q.__dict__.items()
-    l = [(k, v) for k, v in items if k.startswith("ans") and v != '' and v!= None]
+    l = [(k, v) for k, v in items if k.startswith("ans") and v != '' and v != None]
     l.sort()
     return l
 
-def getqs03():
-    return '''q03 = StringField('Wie schwer sind Sie? (in kg)')'''
-
 class MultiCheckboxField(SelectMultipleField):
+    """Subclassing my own form field type."""
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
 class LoginForm(FlaskForm):
+    """The Login Form."""
     accessToken = StringField('Token', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 class TokenForm(FlaskForm):
+    """Form to generate new access tokens."""
     quantity = IntegerField('Anzahl neuer Token', validators=[DataRequired()])
     role = SelectField('Rolle', choices=[
                                         ('User', 'Teilnehmer'),
@@ -47,6 +47,7 @@ class TokenForm(FlaskForm):
     submit = SubmitField('Erzeuge Token')
 
 class QuestionForm(FlaskForm):
+    """Form to generate new questions."""
     category = SelectField('Kategorie', choices=[
                                                 ('Allgemeines', 'Allgemeines'),
                                                 ('Ernährung', 'Ernährung'),
@@ -82,8 +83,8 @@ class QuestionForm(FlaskForm):
     sort = IntegerField('Sortierung')
     submit = SubmitField('Weiter')
 
-# TODO: Add validators to StringFields
 class SurveyForm(FlaskForm):
+    """The final survey form. Generated on the fly from questions in the DB."""
     qslist = getQuestions()
     for qs in qslist:
         exec(qs)

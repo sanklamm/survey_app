@@ -1,9 +1,9 @@
+from pprint import pprint
 from flask import render_template, flash, redirect, jsonify, json, url_for, request
 from app.forms import LoginForm, QuestionForm, SurveyForm, TokenForm
 from app.models import Question, Answer, User
 from app import app
 from app import db
-# from flask_login import current_user, login_user, login_required, logout_user
 from flask_login import login_user, logout_user
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 
@@ -20,6 +20,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """The Login route."""
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -35,12 +36,14 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """The Logout route."""
     logout_user()
     return redirect(url_for('index'))
 
 @app.route('/token/neu', methods=['GET', 'POST'])
 @roles_required('Admin')
 def newToken():
+    """Route to generate new token."""
     form = TokenForm()
     if form.validate_on_submit():
         User.generate_token(form.quantity.data, form.role.data)
@@ -52,6 +55,7 @@ def newToken():
 @app.route('/frage/neu', methods=['GET', 'POST'])
 @roles_required('Admin')
 def newQuestion():
+    """Route to generate new questions."""
     form = QuestionForm()
     if form.validate_on_submit():
         question = Question(category=form.category.data,
@@ -87,44 +91,36 @@ def newQuestion():
 @app.route('/umfrage', methods=['GET', 'POST'])
 @login_required
 def newSurvey():
+    """Route to the survey."""
     form = SurveyForm()
-    # print(form.__dict__)
-    # for field in form:
-    #     print()
-    #     print(field.type)
-    #     print(field)
-        # if field.type == "RadioField": print(field)
-    # for element in form:
-    #     print(element.id)
-    if form.validate_on_submit():
-        answerString = generateAnswer(form)
-        exec(answerString)
-        # answer = Answer(usedToken='12345',
-        #                 q01=form.q01.data,
-        #                 q02=form.q02.data,
-        #                 q03=form.q03.data,
-        #                 q04=form.q04.data,
-        #                 )
-        # json.dumps()
-        # db.session.add(answer)
-        exec('db.session.add(answer)')
+    ans = Answer(usedToken=current_user.id)
+    db.session.add(ans)
+    db.session.commit()
+    if form.is_submitted():
+        ans = Answer.query.filter_by(usedToken=current_user.id).first()
+        for element in form:
+            if element.id.startswith('q'):
+                if type(element.data) is list:
+                    setattr(ans, element.id, str(element.data))
+                else:
+                    setattr(ans, element.id, element.data)
         db.session.commit()
+        current_user.invalidate_token()
+        logout_user()
         return redirect('/fertig')
     return render_template('newSurvey.html', title='Umfrage', form=form)
 
 @app.route('/fertig')
 def success():
+    """The Route after a submitted survey."""
     return render_template('success.html')
 
-
-# TODO: Add Token
-def generateAnswer(form):
-    # foo = f'answer = Answer(usedToken="12345", '
-    foo = f'answer = Answer('
-    for element in form:
-        # print(element.data)
-        if element.id.startswith('q'):
-            foo= foo + f'q{int(element.id[1:])+1:02} = form.{element.id}.data, '
-    foo = foo + ')'
-    # print(foo)
-    return foo
+@app.route('/save', methods=['POST'])
+def save():
+    """Route called by Ajax method when user switches a tab in the survey."""
+    ans = Answer.query.filter_by(usedToken=current_user.id).first()
+    for k, v in request.form.items():
+        if k.startswith('q'):
+            setattr(ans, k, v)
+    db.session.commit()
+    return jsonify({'status': 'ok'})

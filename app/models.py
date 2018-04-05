@@ -43,8 +43,9 @@ class User(UserMixin, db.Model):
             db.session.add(token)
         db.session.commit()
 
-    def invalidate_token(self, token):
-        pass
+    def invalidate_token(self):
+        self.used = True
+        db.session.commit()
 
     def get_num_unused_token():
         num = db.session.query(User).filter_by(used=False).count()
@@ -82,7 +83,7 @@ class Question(db.Model):
 
     def __repr__(self):
         return '<Question: {}>'.format(self.question)
-
+# TODO: Bei Neustart: hier führende Nullen entfernen --> ids in DB haben auch keine!
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usedToken = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -119,6 +120,13 @@ class Answer(db.Model):
     q31 = db.Column(db.String(40))
     q32 = db.Column(db.String(40))
     q33 = db.Column(db.String(40))
+    q34 = db.Column(db.String(40))
+    q35 = db.Column(db.String(40))
+    q36 = db.Column(db.String(40))
+    q37 = db.Column(db.String(40))
+    q38 = db.Column(db.String(40))
+    q39 = db.Column(db.String(40))
+    q40 = db.Column(db.String(40))
 
     def __repr__(self):
         return '<Answers given by token: {}>'.format(self.usedToken)

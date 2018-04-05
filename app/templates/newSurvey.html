@@ -18,6 +18,9 @@
                         <input type="checkbox" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
                     </label>
                 {% endfor %}
+                {% for error in field.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             </div>
             {% elif field.type == "RadioField" %}
@@ -29,6 +32,9 @@
                         <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
                     </label>
                 {% endfor %}
+                {% for error in field.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             </div>
             {% else %}
@@ -36,6 +42,9 @@
             <p>
                 {{ field.label }}
                 {{ field (class_="form-control")}}
+                {% for error in field.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
             </p>
             </div>
             {% endif %}
@@ -46,11 +55,6 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 37%;">
-            <span class="sr-only">60% Complete</span>
-        </div>
-    </div>
     <h1>Umfrage</h1>
     <ul class="nav nav-tabs">
         <li id="tab1" class="active"><a data-toggle="tab" href="#allgemein">Allgemein</a></li>
@@ -58,12 +62,13 @@
         <li id="tab3"><a data-toggle="tab" href="#freizeit">Freizeitverhalten</a></li>
         <li id="tab4"><a data-toggle="tab" href="#gesundheit">Gesundheit</a></li>
     </ul>
-    <form id="input-progress" action="" method="post">
+    <form id="survey" action="" method="post">
         {{ form.hidden_tag() }}
         <p>
             <div class="tab-content">
                 <div id="allgemein" class="tab-pane fade in active">
                     {{ render_form(form, "Allgemeines") }}
+                    <p><button class="btn"><a href="javascript:saveTempData()">Speichern</a></button></p>
                     <p><button id="btn1" class="btn pull-right"><a data-toggle="tab" href="#ernaehrung">Weiter</a></button></p>
                 </div>
                 <div id="ernaehrung" class="tab-pane fade">
@@ -90,43 +95,33 @@
 {% block scripts %}
 {{ super() }}
     <script>
-        document.getElementById("btn1").onclick = function() { $('#tab2').tab('show') };
-        document.getElementById("btn2").onclick = function() { $('#tab3').tab('show') };
-        document.getElementById("btn3").onclick = function() { $('#tab4').tab('show') };
-        document.getElementById("btn4").onclick = function() { $('#tab1').tab('show') };
-        document.getElementById("btn5").onclick = function() { $('#tab2').tab('show') };
-        document.getElementById("btn6").onclick = function() { $('#tab3').tab('show') };
-
-        $(document).ready(function(){
-            function updateInputProgress(){
-                var filledFields = 0;
-                console.log("filled Fields: " + filledFields);
-                $("#input-progress").find("input, select, ul").each(function(){
-                    if($(this).val() != ""){
-                        filledFields++;
-                        console.log("filled Fields: " + filledFields);
-                    }
-                });
-                
-                var percent = Math.ceil(100 * filledFields / totalFields);
-                $("#progress-inputs .progress-bar").attr("aria-valuenow", percent).width(percent + "%").find(".sr-only").html(percent + "% Complete");
-                
-                return percent;
-            }
-            
-            //Input Progress
-            var totalFields = $("#input-progress").find("input, select").length;
-            console.log("total Fields: " + totalFields);
-            $("#input-progress").click(function(){
-                updateInputProgress();
-            });
-            $("#input-progress .btn-success").click(function(){
-                var percent = updateInputProgress();
-                if(percent == 100){
-                    alert("Finished inputs successfully!");
-                }
+        document.getElementById("btn1").onclick = function() { saveTempData(); $('#tab2').tab('show') };
+        document.getElementById("btn2").onclick = function() { saveTempData(); $('#tab3').tab('show') };
+        document.getElementById("btn3").onclick = function() { saveTempData(); $('#tab4').tab('show') };
+        document.getElementById("btn4").onclick = function() { saveTempData(); $('#tab1').tab('show') };
+        document.getElementById("btn5").onclick = function() { saveTempData(); $('#tab2').tab('show') };
+        document.getElementById("btn6").onclick = function() { saveTempData(); $('#tab3').tab('show') };
+    </script>
+    <script>
+        function saveTempData() { // save temporary form data to DB via ajax
+            var formArray = $('#survey').serializeArray();
+            var formObject = objectifyForm(formArray);
+            console.log(formObject);
+            $.ajax({
+                url: '/save',
+                data: formObject,
+                type: "POST",
             })
-            
-        });
+            .done(function(response) {
+                console.log(response);
+            });
+        }
+        function objectifyForm(formArray) { // make object from array
+            var returnObject = {};
+            for (var i = 0; i < formArray.length; i++){
+                returnObject[formArray[i]['name']] = formArray[i]['value'];
+            }
+            return returnObject;
+        }
     </script>
 {% endblock %}
