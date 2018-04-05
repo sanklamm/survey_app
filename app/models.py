@@ -1,7 +1,6 @@
 from app import db
 from app import login
 from app import app
-# from flask_login import UserMixin
 from flask_user import current_user, login_required, roles_required, UserManager, UserMixin
 import string
 import random
@@ -133,7 +132,3 @@ class Answer(db.Model):
 
 def token_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
-
-# print("-------------DB--------------")
-# print(db.config)
-# user_manager = UserManager(app, db)

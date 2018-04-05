@@ -14,9 +14,11 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
+
 # for debugging
 app.debug = True
-toolbar = DebugToolbarExtension(app)
+# toolbar = DebugToolbarExtension(app)
+
 # for login
 login = LoginManager(app)
 from app import routes, models

@@ -1,12 +1,19 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>Willkommen zur Umfrage</h1>
-    <p>Herzlich Willkommen zur Umfrage der MaTSE Klasse MTS61.</p>
-    <p>Im Ramen des Lernfeldes Statistik führen wir eine Umfrage zum Thema <strong>Gesundheit, Ernährung und Freizeit</strong> durch. Wir würden uns über möglichst vollständige und ehrliche Antworten freuen.</p>
-    <p>Eure Daten sind anonym und werden nicht an Dritte weiter gegeben.</p>
-    <p>Du hast von Deinem Lehrer einen Zettel mit einem Code bekommen -- wenn nicht, sprich ihn bitte darauf an. <br>
-    Mit diesem Code kannst Du Dich anmelden und dann an der Umfrage teilnehmen.</p>
-    <p>Jeder Code kann nur einmal verwendet werden und erlischt sobald die Umfrage angeschickt wurde.</p>
-    <h4>Vielen Dank für Deine Teilnahme.</h4>
+    {% if current_user.is_authenticated %}
+        <h1>Anmeldung erfolgreich.</h1>
+        <p>Du kannst nun an der Umfrage teilnehmen.</p>
+        <p>Wir würden uns über eine möglichst vollständige und ehrliche Beantwortung der Fragen freuen.</p>
+        <p>Bitte bedenke, dass dein Token erlischt, sobald du am Ende der Umfrage auf "Abschicken" drückst.</p>
+    {% else %}
+        <h1>Willkommen zur Umfrage</h1>
+        <p>Herzlich Willkommen zur Umfrage der MaTSE Klasse MTS61.</p>
+        <p>Im Ramen des Lernfeldes Statistik führen wir eine Umfrage zum Thema <strong>Gesundheit, Ernährung und Freizeit</strong> durch. Wir würden uns über möglichst vollständige und ehrliche Antworten freuen.</p>
+        <p>Eure Daten sind anonym und werden nicht an Dritte weiter gegeben.</p>
+        <p>Du hast von Deinem Lehrer einen Zettel mit einem Code bekommen -- wenn nicht, sprich ihn bitte darauf an. <br>
+        Mit diesem Code kannst Du Dich anmelden und dann an der Umfrage teilnehmen.</p>
+        <p>Jeder Code kann nur einmal verwendet werden und erlischt sobald die Umfrage angeschickt wurde.</p>
+        <h4>Vielen Dank für Deine Teilnahme.</h4>
+    {% endif %}
 {% endblock %}
