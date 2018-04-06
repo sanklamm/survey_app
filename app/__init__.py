@@ -8,6 +8,7 @@ from flask_login import LoginManager
 from flask_admin import Admin, helpers, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_user import UserManager, current_user
+from flask_babelex import Babel
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -22,6 +23,9 @@ app.debug = True
 # for login
 login = LoginManager(app)
 from app import routes, models
+
+# Initialize Flask-BabelEx
+babel = Babel(app)
 
 class MyModelView(ModelView):
     # Allow only admins to access Admin views

@@ -8,3 +8,6 @@ class Config(object):
     # Flask-User settings
     USER_ENABLE_EMAIL = False        # Enable email authentication
     USER_ENABLE_USERNAME = True    # Disable username authentication
+    USER_UNAUTHENTICATED_ENDPOINT = 'login'
+
+    LANGUAGES = ['en', 'es']
