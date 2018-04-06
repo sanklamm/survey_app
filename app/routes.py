@@ -1,4 +1,3 @@
-from pprint import pprint
 from flask import render_template, flash, redirect, jsonify, json, url_for, request
 from app.forms import LoginForm, QuestionForm, SurveyForm, TokenForm
 from app.models import Question, Answer, User

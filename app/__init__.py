@@ -28,7 +28,6 @@ class MyModelView(ModelView):
     def is_accessible(self):
         if not current_user.is_authenticated: return False
         return current_user.has_roles('Admin')
-        # return current_user.is_authenticated
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
