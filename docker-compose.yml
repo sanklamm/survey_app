@@ -1,0 +1,38 @@
+version: '2'
+
+volumes:
+    data-db:
+
+services:
+    web:
+        restart: always
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: nginx-flask
+        ports:
+            - 80:80
+        links:
+            - db
+        container_name: surveyapp_web
+        depends_on:
+            - db
+
+    db:
+        image: mysql:5.7
+        restart: always
+        container_name: surveyapp_db
+        env_file: .env
+        volumes:
+            - data-db:/var/lib/mysql
+        ports:
+            - 3306:3306
+
+    pma:
+        image: phpmyadmin/phpmyadmin
+        container_name: surveyapp_pma
+        env_file: .env
+        ports:
+            - 8080:80
+        links:
+            - db

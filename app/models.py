@@ -34,6 +34,11 @@ class User(UserMixin, db.Model):
             return True
         else: return False
 
+    def is_Admin(self):
+        if 'Admin' in self.roles:
+            return True
+        else: return False
+
     def generate_token(quantity, role):
         role_ = Role.query.filter_by(name=role).first()
         for _ in range(quantity):

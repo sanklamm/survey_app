@@ -17,12 +17,37 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 
 # for debugging
-app.debug = True
+# app.debug = True
 # toolbar = DebugToolbarExtension(app)
 
 # for login
 login = LoginManager(app)
-from app import routes, models
+from app import models
+
+# initialize db
+db.create_all()
+
+print("--------- DB created ----------")
+print(models.Role.query.filter_by(name="Admin").first())
+if not models.Role.query.filter_by(name="Admin").first():
+    print("------------ No Admin Role found ------------")
+    role_admin = models.Role(name='Admin')
+    db.session.add(role_admin)
+    db.session.commit()
+if not models.Role.query.filter_by(name="User").first():
+    print("------------ No User Role found ------------")
+    role_user = models.Role(name='User')
+    db.session.add(role_user)
+    db.session.commit()
+if not models.User.query.filter_by(password="MTS61PWD").first():
+    print("------------ No Admin User found ------------")
+    role_ = models.Role.query.filter_by(name="Admin").first()
+    admin_user = models.User(password="MTS61PWD", used=False)
+    admin_user.roles = [role_,]
+    db.session.add(admin_user)
+    db.session.commit()
+
+from app import routes
 
 # Initialize Flask-BabelEx
 babel = Babel(app)

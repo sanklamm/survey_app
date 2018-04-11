@@ -30,7 +30,7 @@ def login():
             flash('Kein gültiger Token oder Token bereits verbraucht.')
             return redirect(url_for('login'))
         login_user(token)
-        return redirect('/index')
+        return redirect('/umfrage')
     return render_template('login.html', title='Authentifizierung', form=form)
 
 @app.route('/logout')
@@ -104,7 +104,8 @@ def newSurvey():
                 else:
                     setattr(ans, element.id, element.data)
         db.session.commit()
-        current_user.invalidate_token()
+        if not current_user.is_Admin:
+            current_user.invalidate_token()
         logout_user()
         return redirect('/fertig')
     return render_template('newSurvey.html', title='Umfrage', form=form)
