@@ -68,21 +68,21 @@
             <div class="tab-content">
                 <div id="allgemein" class="tab-pane fade in active">
                     {{ render_form(form, "Allgemeines") }}
-                    <p><button id="btn1" class="btn pull-right"><a data-toggle="tab" href="#ernaehrung">Weiter</a></button></p>
+                    <p><a data-toggle="tab" href="#ernaehrung"></a><button id="btn1" class="btn pull-right">Weiter</button></a></p>
                 </div>
                 <div id="ernaehrung" class="tab-pane fade">
                     {{ render_form(form, "Ernährung") }}
-                    <p><button id="btn4" class="btn"><a data-toggle="tab" href="#allgemein">Zurück</a></button>
-                    <button id="btn2" class="btn pull-right"><a data-toggle="tab" href="#freizeit">Weiter</a></button></p>
+                    <p><a data-toggle="tab" href="#allgemein"></a><button id="btn4" class="btn">Zurück</button></a>
+                    <a data-toggle="tab" href="#freizeit"></a><button id="btn2" class="btn pull-right">Weiter</button></a></p>
                 </div>
                 <div id="freizeit" class="tab-pane fade">
                     {{ render_form(form, "Freizeitverhalten") }}
-                    <p><button id="btn5" class="btn"><a data-toggle="tab" href="#ernaehrung">Zurück</a></button>
-                    <button id="btn3" class="btn pull-right"><a data-toggle="tab" href="#gesundheit">Weiter</a></button></p>
+                    <p><a data-toggle="tab" href="#ernaehrung"></a><button id="btn5" class="btn">Zurück</button></a>
+                    <a data-toggle="tab" href="#gesundheit"></a><button id="btn3" class="btn pull-right">Weiter</button></a></p>
                 </div>
                 <div id="gesundheit" class="tab-pane fade">
                     {{ render_form(form, "Gesundheit") }}
-                    <p><button id="btn6" class="btn"><a data-toggle="tab" href="#freizeit">Zurück</a></button>
+                    <p><a data-toggle="tab" href="#freizeit"></a><button id="btn6" class="btn">Zurück</button></a>
                     {{ form.submit (class_="btn btn-primary pull-right") }}</p>
                 </div>
             </div>
