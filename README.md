@@ -41,3 +41,13 @@ To achieve this I wrote a function that reads the entire Questions table and bui
 This f-string gets executed at runtime.
 
 To dynamically produce the template for the survey form I relied on macros.
+
+## Deployment
+The app requires Python 3.6 as it heavily relies on f-strings.  
+The app is prepared to be deployed via Docker and run with supervisord. The docker-compose contains three services
+* PhpMyAdmin
+* MySQL
+* Web, which has
+    * Nginx
+    * uwsgi
+    * flask app
